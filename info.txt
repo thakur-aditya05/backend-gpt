@@ -1,0 +1,134 @@
+AWS setup
+
+step1:-
+    ec2 instance 
+    ubunto 
+    free air 
+    pem 
+    rsa 
+    prodkeypair
+
+step2:- 
+connect terminal with ec2 instance (ssh client )
+    - chmod 400"prod-key-pair.pem" {koi bhi key ko nahi dekh skta hai }
+    - ssh -i "prod-key-pair.pem" ubuntu@ec2-15-206-174-236
+    - yes 
+
+
+step 3: 
+we are inside he ec2 instance 
+[{ubunto@ip-172-31-13-112 (pvt ip addrsss  )}]
+    - sudo apt update
+    -  sudo apt install node.js npm
+    - yes 
+    - sudo npm install -g pm2 
+    - sudo npm install nginx -y (react vite kisi port pe directed hai to public dns se hi accessble ho frontend bhi aisa kr ahai hame )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GITHUB workflow yaha se create krna hai 
+
+
+
+step1 : 
+start the new workflow node.js by git action 
+    - remove pull type something
+    -  version 20only 
+    - self hosted
+    -  
+
+step2 : 
+create the new runner (jobs ki sari steps yaha executes hongi )
+[to intgrate the entire CICD workflow created on the github with AWS account  ]
+    - linux type 
+    - # Create a folder
+        $ mkdir backend-runner && cd backend-runner
+    - # Download the latest runner package
+         $ curl -o actions-runner-linux-x64-2.329.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.329.0/actions-runner-linux-x64-2.329.0.tar.gz
+    - # Optional: Validate the hash
+         $ echo "194f1e1e4bd02f80b7e9633fc546084d8d4e19f3928a324d512ea53430102e1d  actions-runner-linux-x64-2.329.0.tar.gz" | shasum -a 256 -c# Extract the installer
+         $ tar xzf ./actions-runner-linux-x64-2.329.0.tar.gz
+
+    - # Create the runner and start the configuration experience
+          $ ./config.sh --url https://github.com/thakur-aditya05/backend-gpt --token BUD22X5LCBGAWC7BCVVX3NDJFALIS
+    -   enter 
+    - enter 
+    - enter 
+    
+step3:-     
+work floder 
+  
+  - sudo ./svc.sh install {this file will contain our all the file and intruction about our runner }
+  - sudo ./svc.sh start 
+  - ls 
+  - cd _work
+  - cd backend-gpt/
+  - ls 
+  - cd backend-gpt/
+  - nano .env {create the our own .venv file }
+  - ls -a 
+
+
+step 4:-
+allow access to port 8080
+custom TCP 8080 0.0.0.0/0
+
+step 5:- 
+starting the server 
+    - sudo pm2 start server.js --name=backend
+
+step 6:- 
+getting into the atlas account 
+atlas account and network access 
+    - add ip address -> 0.0.0.0/0 -->
+
+step 7:
+restart our backend
+starting the server 
+    - sudo pm2 start server.js --name=backend
+
+step 8:-
+create test route by pulling the new changes from 
+    -- // test route for openai API directly in server.js
+        app.get("/test", async (req, res) => {
+            res.json({
+                message: "API is working fine!"
+            });
+        });
+
+
+step 9:-
+    - sudo pm2 backend start {adding the step of the continous re-run the backend}
+    
+
+
+
+
+step 10:- 
+        <!-- we have the probleum that ki when we backed restart every time env variable get overlabe ho jaiti hai   -->
+        <!-- to hame ek aisa krna hai ki eve varivale ek baar create ho and wo sada ke liye rahe jitni baar backed restart ho  -->
+        # nano .env
+        save the variable 
+
+            - name: Backup .env
+            run: |
+                if [-f .env]; then mv .env /temp/env_backup; fi
+
+        # this will be used to restore the file form the backup /dire
+            - name: Restore .env
+            run: |
+                if [-f /temp/env_backup]; then mv /temp/env_backup .env; fi

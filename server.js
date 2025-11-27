@@ -27,6 +27,13 @@ const connectDB = async() => {
 }
 
 
+// test route for openai API directly in server.js
+app.get("/test", async (req, res) => {
+    res.json({
+        message: "API is working fine!"
+    });
+});
+
 // app.post("/test", async (req, res) => {
 //     const options = {
 //         method: "POST",
